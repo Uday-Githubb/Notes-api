@@ -1,6 +1,6 @@
 # Notes API (Express + MongoDB)
 
-Production-ready backend for a Notes App showcasing JWT auth, user data isolation, pagination, Swagger docs, rate limiting, Docker, and CI.
+Notes App showcasing JWT auth, user data isolation, pagination, Swagger docs, rate limiting, Docker, and CI.
 
 ## Tech Stack
 - Node.js (Express)
