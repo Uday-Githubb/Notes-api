@@ -103,3 +103,15 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .hero-surface {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(
+      800px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+      hsl(var(--primary) / 0.12),
+      transparent 55%
+    );
+  }
+}
