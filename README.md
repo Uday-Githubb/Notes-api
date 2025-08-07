@@ -1,73 +1,83 @@
-# Welcome to your Lovable project
+# Notes API (Express + MongoDB)
 
-## Project info
+Production-ready backend for a Notes App showcasing JWT auth, user data isolation, pagination, Swagger docs, rate limiting, Docker, and CI.
 
-**URL**: https://lovable.dev/projects/c70e4966-71ee-4017-a169-29d0f051e8f0
+## Tech Stack
+- Node.js (Express)
+- MongoDB / Mongoose
+- JWT auth (bcryptjs)
+- Jest + Supertest (>=90% coverage target)
+- Swagger (OpenAPI) at /api-docs
+- Rate limiting (100 reqs / 15 mins)
+- Dockerfile
+- GitHub Actions CI
+- Optional Redis caching for GET /notes (if REDIS_URL provided)
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/c70e4966-71ee-4017-a169-29d0f051e8f0) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## Project Structure
+```
+backend/
+  src/
+    controllers/   # Route handlers
+    models/        # Mongoose schemas
+    routes/        # Express routers
+    middleware/    # Auth & error middleware
+    config/        # DB connection & env vars
+    utils/         # Helpers & caching
+    docs/          # OpenAPI spec
+    app.js         # App setup
+    server.js      # Bootstrap server
+  tests/           # Jest + Supertest
+  Dockerfile
+  package.json
 ```
 
-**Edit a file directly in GitHub**
+## Getting Started (Local)
+1) Install deps
+```
+cd backend
+npm ci
+```
+2) Create .env
+```
+cp .env.example .env
+# set MONGO_URI and JWT_SECRET
+```
+3) Run dev server
+```
+npm run dev
+```
+4) Swagger docs
+- http://localhost:3000/api-docs
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Testing
+```
+cd backend
+npm test
+# or with coverage
+npm run coverage
+```
+Tests run against an in-memory MongoDB (mongodb-memory-server).
 
-**Use GitHub Codespaces**
+## Docker
+```
+cd backend
+docker build -t notes-api .
+docker run -p 3000:3000 --env-file .env notes-api
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## API Quickstart
+- POST /api/auth/signup { email, password }
+- POST /api/auth/login { email, password }
+- Auth header: Authorization: Bearer <token>
+- Notes:
+  - POST /api/notes { title, content }
+  - GET /api/notes?page=1&limit=10
+  - GET /api/notes/:id
+  - PUT /api/notes/:id { title?, content? }
+  - DELETE /api/notes/:id
 
-## What technologies are used for this project?
+## CI
+GitHub Actions runs on push/PR and uploads coverage artifacts.
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/c70e4966-71ee-4017-a169-29d0f051e8f0) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Bonus: Redis Caching
+If REDIS_URL is set, GET /notes will cache per-user/page/limit for 60s and auto-invalidate on write operations.
