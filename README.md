@@ -40,7 +40,9 @@ npm ci
 2) Create .env
 ```
 cp .env.example .env
-# set MONGO_URI and JWT_SECRET
+# Option A (quick demo): leave MONGO_URI=memory (in-memory DB)
+# Option B (local Mongo): set MONGO_URI=mongodb://localhost:27017/notesapp and ensure Mongo is running
+# Set a strong JWT_SECRET
 ```
 3) Run dev server
 ```
